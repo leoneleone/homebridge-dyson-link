@@ -179,12 +179,17 @@ class DysonLinkDevice {
     setHeatOn(value, callback) {
         this.setState({ hmod: value ? "HEAT" : "OFF" });
         this.isHeatOn(callback);
+        //this.isHeatOn(callback ? 1:2);
+        //Characteristic.TargetHeatingCoolingState.OFF = 0;
+        //Characteristic.TargetHeatingCoolingState.HEAT = 1;
+        //Characteristic.TargetHeatingCoolingState.COOL = 2;
+        //Characteristic.TargetHeatingCoolingState.AUTO = 3;
     }
 
     isHeatOn(callback) {
         this.mqttEvent.once(this.STATE_EVENT, () => {
             this.log.info(this.displayName + " - Heat On: " + this.fanState.fanHeat);
-            callback(null, this.fanState.fanHeat);
+            callback(null, this.fanState.fanHeat? 1:2);
         });
         // Request for udpate
         this.requestForCurrentUpdate();
