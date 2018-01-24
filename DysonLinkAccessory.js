@@ -79,41 +79,52 @@ class DysonLinkAccessory {
 
         this.fan.getCharacteristic(Characteristic.Active)
             .on("get", this.device.isFanOn.bind(this.device))
-            .on("set", this.device.setFanOn.bind(this.device));
-            
-        this.fan.getCharacteristic(Characteristic.SwingMode)
-            .on("get", this.device.isRotate.bind(this.device))
-            .on("set", this.device.setRotate.bind(this.device));
-
-        // this.fan.getCharacteristic(Characteristic.TargetFanState)
-        //     .on("get", this.device.isFanAuto.bind(this.device))
-        //     .on("set", this.device.setFanAuto.bind(this.device));
-        this.autoSwitch = this.getServiceBySubtype(Service.Switch, "Auto - " + this.displayName, "Auto");
+            .on("set", this.device.setFanOn.bind(this.device));            
         
-        this.autoSwitch
-            .getCharacteristic(Characteristic.On)
+        this.fan.getCharacteristic(Characteristic.TargetFanState)
             .on("get", this.device.isFanAuto.bind(this.device))
             .on("set", this.device.setFanAuto.bind(this.device));
+        //this.autoSwitch = this.getServiceBySubtype(Service.Switch, "Auto - " + this.displayName, "Auto");
+        //
+        //this.autoSwitch
+        //    .getCharacteristic(Characteristic.On)
+        //    .on("get", this.device.isFanAuto.bind(this.device))
+        //    .on("set", this.device.setFanAuto.bind(this.device));
 
         // This is actually the fan speed instead of rotation speed but homekit fan does not support this
         this.fan.getCharacteristic(Characteristic.RotationSpeed)
             .on("get", this.device.getFanSpeed.bind(this.device))
-            .on("set", this.device.setFanSpeed.bind(this.device));        
-                  
-        this.nightModeSwitch = this.getServiceBySubtype(Service.Switch, "Night Mode - " + this.displayName, "Night Mode");
-
-        this.nightModeSwitch
-            .getCharacteristic(Characteristic.On)
+            .on("set", this.device.setFanSpeed.bind(this.device));
+        
+        this.fan.getCharacteristic(Characteristic.SwingMode)
+            .on("get", this.device.isRotate.bind(this.device))
+            .on("set", this.device.setRotate.bind(this.device));
+        
+        //Trying MUTE Characteristic??
+        this.fan.addCharacteristic(Characteristic.Mute)
+        //NIGHT VISION Characteristic works in Elgato EVE app but not iOS HOME app.
+        //this.fan.addCharacteristic(Characteristic.NightVision)
+        //
+        //Removed Switch Service
+        //this.nightModeSwitch = this.getServiceBySubtype(Service.Switch, "Night Mode - " + this.displayName, "Night Mode");
+        //this.nightModeSwitch
+        //    .getCharacteristic(Characteristic.On)
             .on("get", this.device.isNightMode.bind(this.device))
             .on("set", this.device.setNightMode.bind(this.device));
 
 
         // Set Heat 
         if (this.device.heatAvailable) {
-            this.log("Heat Available. Add Heat button and jet control");
-            this.heatSwitch = this.getServiceBySubtype(Service.Switch, "Heat - " + this.displayName, "Heat");
-            this.heatSwitch
-                .getCharacteristic(Characteristic.On)
+            //this.log("Heat Available. Add Heat button and jet control");
+            //this.heatSwitch = this.getServiceBySubtype(Service.Switch, "Heat - " + this.displayName, "Heat");
+            //this.heatSwitch
+            //    .getCharacteristic(Characteristic.On)
+            //Trying HeatingCoolingState instead of heatSwitch
+            // The value property of CurrentHeatingCoolingState must be one of the following:
+            //Characteristic.CurrentHeatingCoolingState.OFF = 0;
+            //Characteristic.CurrentHeatingCoolingState.HEAT = 1;
+            //Characteristic.CurrentHeatingCoolingState.COOL = 2;
+            this.fan.addCharacteristic(Characteristic.HeatingCoolingState)
                 .on("get", this.device.isHeatOn.bind(this.device))
                 .on("set", this.device.setHeatOn.bind(this.device));
 
